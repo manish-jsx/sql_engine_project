@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex items-center justify-left" style="width: 70vw;">
+    <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-xxl">
+
+        <h1 class="text-3xl font-bold mb-6 text-center">SQL Engine</h1>
+        <form id="sql-form" class="mb-6">
+            <div class="mb-6">
+                <label for="query" class="block text-sm font-medium text-gray-700">SQL Query:</label>
+                <textarea id="query" name="query"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm h-32 resize-none"></textarea>
+            </div>
+            <button type="submit"
+                class=" bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Execute</button>
+        </form>
+        <h2 class="text-2xl font-semibold mb-4">Result</h2>
+        <pre id="result" class="bg-gray-100 p-4 rounded-md overflow-x-auto h-64"></pre>
+        <div id="skeleton" class="hidden">
+            <div class="skeleton-loader h-6 mb-2"></div>
+            <div class="skeleton-loader h-6 mb-2"></div>
+            <div class="skeleton-loader h-6 mb-2"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Mini Tutorial -->
+<div class="mt-8 p-4 bg-gray-100 rounded-md shadow-lg">
+    <h3 class="text-xl font-semibold mb-4 text-gray-800">Quick Guide: SQL Commands to Try</h3>
+    <p class="text-base text-gray-700 mb-4">Try executing these SQL commands with the SQL Engine:</p>
+
+    <ul class="list-none pl-6">
+        <li>
+            <strong class="text-indigo-600">CREATE TABLE:</strong> Creates a table with specified columns.
+            <ul class="list-none pl-4">
+                <li><strong>Usage:</strong> <code>CREATE TABLE students (name, age);</code></li>
+                <li><strong>Explanation:</strong> Creates a table named <em>students</em> with columns <em>name</em> and <em>age</em>.</li>
+            </ul>
+        </li>
+        <br>
+        <hr>
+        <br>
+        <li>
+            <strong class="text-indigo-600">INSERT INTO:</strong> Inserts data into an existing table.
+            <ul class="list-none pl-4">
+                <li><strong>Usage:</strong> <code>INSERT INTO students VALUES ('Alice', 21);</code></li>
+                <li><strong>Explanation:</strong> Inserts a row into the <em>students</em> table with values <em>'Alice'</em> and <em>21</em>.</li>
+            </ul>
+        </li>
+        <br>
+        <hr>
+        <br>
+        <li>
+            <strong class="text-indigo-600">SELECT:</strong> Retrieves data from a table based on specified columns.
+            <ul class="list-none pl-4">
+                <li><strong>Usage:</strong> <code>SELECT name FROM students;</code></li>
+                <li><strong>Explanation:</strong> Retrieves the <em>name</em> column from the <em>students</em> table.</li>
+            </ul>
+        </li>
+        <br>
+        <hr>
+        <br>
+        <li>
+            <strong class="text-indigo-600">UPDATE:</strong> Updates data in a table based on conditions.
+            <ul class="list-none pl-4">
+                <li><strong>Usage:</strong> <code>UPDATE students SET age = 22 WHERE name = 'Alice';</code></li>
+                <li><strong>Explanation:</strong> Updates the <em>age</em> to <em>22</em> for rows where <em>name</em> is <em>'Alice'</em> in the <em>students</em> table.</li>
+            </ul>
+        </li>
+        <br>
+        <hr>
+        <br>
+        <li>
+            <strong class="text-indigo-600">DELETE:</strong> Deletes data from a table based on conditions.
+            <ul class="list-none pl-4">
+                <li><strong>Usage:</strong> <code>DELETE FROM students WHERE name = 'Bob';</code></li>
+                <li><strong>Explanation:</strong> Deletes rows where <em>name</em> is <em>'Bob'</em> from the <em>students</em> table.</li>
+            </ul>
+        </li>
+        <br>
+        <hr>
+        <br>
+        <li>
+            <strong class="text-indigo-600">DROP TABLE:</strong> Deletes a table from the database.
+            <ul class="list-none pl-4">
+                <li><strong>Usage:</strong> <code>DROP TABLE students;</code></li>
+                <li><strong>Explanation:</strong> Removes the <em>students</em> table from the database.</li>
+            </ul>
+        </li>
+        <br>
+        <hr>
+        <br>
+        <li>
+            <strong class="text-indigo-600">CREATE INDEX:</strong> Creates an index on a table.
+            <ul class="list-none pl-4">
+                <li><strong>Usage:</strong> <code>CREATE INDEX idx_name ON students (name);</code></li>
+                <li><strong>Explanation:</strong> Creates an index named <em>idx_name</em> on the <em>name</em> column of the <em>students</em> table.</li>
+            </ul>
+       </li>
+        <br>
+        <hr>
+        <br>
+        <li>
+            <strong class="text-indigo-600">DROP INDEX:</strong> Deletes an index from a table.
+            <ul class="list-none pl-4">
+                <li><strong>Usage:</strong> <code>DROP INDEX idx_name;</code></li>
+                <li><strong>Explanation:</strong> Removes the index named <em>idx_name</em> from the table.</li>
+            </ul>
+       </li>
+        <br>
+        <hr>
+        <br>
+        <li>
+            <strong class="text-indigo-600">ALTER TABLE:</strong> Modifies a table (e.g., adding columns).
+            <ul class="list-none pl-4">
+                <li><strong>Usage:</strong> <code>ALTER TABLE students ADD COLUMN email VARCHAR(255);</code></li>
+                <li><strong>Explanation:</strong> Adds an <em>email</em> column of type <em>VARCHAR(255)</em> to the <em>students</em> table.</li>
+            </ul>
+       </li>
+        <br>
+        <hr>
+        <br>
+        <li>
+            <strong class="text-indigo-600">JOIN:</strong> Performs various types of table joins (INNER, LEFT, RIGHT, FULL).
+            <ul class="list-none pl-4">
+                <li><strong>Usage:</strong> <code>SELECT * FROM students INNER JOIN grades ON students.id = grades.student_id;</code></li>
+                <li><strong>Explanation:</strong> Performs an INNER JOIN between <em>students</em> and <em>grades</em> tables based on <em>id</em> and <em>student_id</em>.</li>
+            </ul>
+       </li>
+        <br>
+        <hr>
+        <br>
+        <li>
+            <strong class="text-indigo-600">UNION:</strong> Combines results from multiple SELECT statements.
+            <ul class="list-none pl-4">
+                <li><strong>Usage:</strong> <code>SELECT * FROM students UNION SELECT * FROM alumni;</code></li>
+                <li><strong>Explanation:</strong> Combines results from <em>students</em> and <em>alumni</em> tables.</li>
+            </ul>
+       </li>
+        <br>
+        <hr>
+        <br>
+        <li>
+            <strong class="text-indigo-600">UNION ALL:</strong> Combines results from multiple SELECT statements, including duplicates.
+            <ul class="list-none pl-4">
+                <li><strong>Usage:</strong> <code>SELECT * FROM students UNION ALL SELECT * FROM alumni;</code></li>
+                <li><strong>Explanation:</strong> Combines all results from <em>students</em> and <em>alumni</em> tables, including duplicates.</li>
+            </ul>
+       </li>
+        <br>
+        <hr>
+        <br>
+        <li>
+            <strong class="text-indigo-600">EXISTS:</strong> Checks for existence of rows that meet specified conditions.
+            <ul class="list-none pl-4">
+                <li><strong>Usage:</strong> <code>SELECT name FROM students WHERE EXISTS (SELECT * FROM grades WHERE students.id = grades.student_id AND grades.grade = 'A');</code></li>
+                <li><strong>Explanation:</strong> Checks for students in <em>students</em> table with grade 'A' in <em>grades</em> table.</li>
+            </ul>
+       </li>
+        <br>
+        <hr>
+        <br>
+        <li>
+            <strong class="text-indigo-600">CASE:</strong> Implements conditional logic within a query.
+            <ul class="list-none pl-4">
+                <li><strong>Usage:</strong> <code>SELECT CASE WHEN age >= 18 THEN 'Adult' ELSE 'Minor' END AS category FROM students;</code></li>
+                <li><strong>Explanation:</strong> Categorizes students as Adult or Minor based on age using a CASE statement.</li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+
+
+
+
+
+
+<script>
+    document.getElementById('sql-form').onsubmit = function (event) {
+        event.preventDefault();
+        const query = document.getElementById('query').value;
+        const resultElement = document.getElementById('result');
+        const skeletonElement = document.getElementById('skeleton');
+
+        // Show skeleton loader and hide result
+        resultElement.textContent = '';
+        resultElement.classList.add('hidden');
+        skeletonElement.classList.remove('hidden');
+
+        fetch(`/execute/?query=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                // Hide skeleton loader and show result
+                skeletonElement.classList.add('hidden');
+                resultElement.classList.remove('hidden');
+                resultElement.textContent = JSON.stringify(data.result, null, 2);
+            });
+    };
+</script>
+
+{% endblock %}

@@ -1,0 +1,42 @@
+# Ignore Python bytecode files
+__pycache__/
+*.py[cod]
+
+# Ignore system and IDE files
+.DS_Store
+Thumbs.db
+.idea/
+*.iml
+
+# Ignore environment-specific settings
+.env
+
+# Ignore Django migration files (if using SQLite)
+*.sqlite3
+
+# Ignore static files (if served separately)
+/staticfiles/
+
+# Ignore media files (user-uploaded content)
+/media/
+
+# Ignore local development settings
+/local_settings.py
+
+# Ignore Vercel-specific deployment files
+.vercel/
+
+# Ignore logs and temporary files
+*.log
+*.swp
+*.swo
+*.tmp
+
+# Ignore database configurations
+/db.sqlite3
+
+# Ignore Python virtual environment
+venv/
+
+# Ignore npm/yarn dependencies (if applicable)
+node_modules/
